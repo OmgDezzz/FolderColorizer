@@ -1,0 +1,186 @@
+﻿<Window x:Class="FolderColorChanger.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:FolderColorChanger"
+        mc:Ignorable="d"
+        Title="Folder Colorizer" 
+        Height="500" Width="400"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
+        Background="#FF1E1E1E">
+
+    <Window.Resources>
+        <!-- All existing styles remain unchanged -->
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="#FF3E3E3E"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#FF555555"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="10 5"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FF4E4E4E"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#FF2E2E2E"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="ListView">
+            <Setter Property="Background" Value="#FF252525"/>
+            <Setter Property="BorderBrush" Value="#FF555555"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="12"/>
+        </Style>
+
+        <Style TargetType="Border">
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#FF555555"/>
+            <Setter Property="Background" Value="#FF252525"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+
+        <!-- New resources for context menu integration -->
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+
+        <Style x:Key="AdminButtonStyle" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Background" Value="#FF007ACC"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Margin" Value="5,2"/>
+        </Style>
+
+        <Style x:Key="ContextMenuToggleStyle" TargetType="CheckBox">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Margin" Value="5,0"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <!-- New row for admin button -->
+        </Grid.RowDefinitions>
+
+        <!-- Header - unchanged -->
+        <Border Grid.Row="0" Background="#FF007ACC">
+            <TextBlock Text="FOLDER COLORIZER" FontSize="16" FontWeight="Bold" 
+                       VerticalAlignment="Center" HorizontalAlignment="Center" 
+                       Foreground="White" Padding="10"/>
+        </Border>
+
+        <!-- Main Content - completely unchanged -->
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Color Selection -->
+            <Border Grid.Row="0">
+                <StackPanel>
+                    <TextBlock Text="SELECT COLOR" FontWeight="Bold" Margin="0,0,0,5"/>
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                        <ItemsControl x:Name="ColorPalette">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Horizontal"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Button Click="ColorButton_Click" Width="60" Height="60" Margin="3" 
+                                            ToolTip="{Binding ColorName}">
+                                        <StackPanel>
+                                            <Image Source="{Binding IconImage}" Width="32" Height="32"/>
+                                            <TextBlock Text="{Binding ColorName}" HorizontalAlignment="Center" 
+                                                       Margin="0,3,0,0" FontSize="10"/>
+                                        </StackPanel>
+                                    </Button>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </StackPanel>
+            </Border>
+
+            <!-- Folder List -->
+            <Border Grid.Row="1">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Orientation="Horizontal" Grid.Row="0">
+                        <Button x:Name="AddFoldersButton" Content="➕ Add Folders" Click="AddFoldersButton_Click"/>
+                        <Button x:Name="RemoveFoldersButton" Content="✖ Remove" Click="RemoveFoldersButton_Click"/>
+                    </StackPanel>
+
+                    <ListView x:Name="FoldersListView" Grid.Row="1">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Selected Folders" DisplayMemberBinding="{Binding}" Width="300"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
+            </Border>
+
+            <!-- Apply Button -->
+            <Button x:Name="ApplyColorButton" Grid.Row="2" Content="🎨 APPLY COLOR" 
+                    Click="ApplyColorButton_Click" FontWeight="Bold" Height="40"/>
+        </Grid>
+
+        <!-- Status Bar - updated with context menu toggle -->
+        <StatusBar Grid.Row="2" Background="#FF252525" Foreground="White">
+            <StatusBarItem>
+                <CheckBox x:Name="ContextMenuToggle" 
+                          Content="Context Menu" 
+                          Style="{StaticResource ContextMenuToggleStyle}"
+                          Click="ContextMenuToggle_Click"
+                          ToolTip="Toggle right-click context menu integration"/>
+            </StatusBarItem>
+            <Separator/>
+            <StatusBarItem>
+                <TextBlock x:Name="StatusText" Text="Ready"/>
+            </StatusBarItem>
+        </StatusBar>
+
+        <!-- New Admin Install Button (only visible when needed) -->
+        <Button x:Name="AdminInstallButton" Grid.Row="3"
+                Content="🛡️ Install for All Users (Admin)" 
+                Style="{StaticResource AdminButtonStyle}"
+                Click="AdminInstallButton_Click"
+                Visibility="Collapsed"/>
+    </Grid>
+</Window>
