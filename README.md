@@ -18,12 +18,7 @@
 🌙 Dark/Light theme - Matches your Windows theme
 
 📥 Installation
-bash
-Copy
-# Clone the repository
-git clone https://github.com/OmgDezzz/FolderColorizer.git
-Or download the latest release:
-Latest Release
+Latest Release (V1.0): https://github.com/OmgDezzz/FolderColorizer/releases/download/v1.0.0/FolderColorizer_v1.0.zip
 
 🛠️ How It Works
 Select folders (drag & drop or via file dialog)
