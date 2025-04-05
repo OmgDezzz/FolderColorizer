@@ -38,18 +38,5 @@ Enjoy your colorful folders! 🎉
 
 🔄 Shell API for real-time updates
 
-🤝 Contributing
-We welcome contributions! Please see:
-
-CONTRIBUTING.md for guidelines
-
-Issues for current tasks
-
 📜 License
 MIT License - Free for personal and commercial use
-
-Settings: ⚙️
-
-Documentation: 📚
-
-Bug fixes: 🐛
